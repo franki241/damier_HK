@@ -1,8 +1,9 @@
 public interface DamierGame {
 	
-	public void play(PionCouleur color, int column) throws GameException;
-	PionCouleur getCell(int column,  int row);
+	public boolean initPlateau();
+	public void play(Couleurs color, int column) throws GameException;
+	Couleurs getCell(int column,  int row);
 	int getColumnsNumber();
 	int getRowsNumber();
-	PionCouleur getWinner();
+	Couleurs getWinner();
 }

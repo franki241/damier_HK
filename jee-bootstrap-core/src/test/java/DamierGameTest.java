@@ -1,5 +1,3 @@
-
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +12,7 @@ public class DamierGameTest {
 	 
 	 @Test
 	   public void itInitializedBoard() throws Exception{
-		// game.init();
+		game.initPlateau();
 		 System.out.println(game);
 	 }
 	 

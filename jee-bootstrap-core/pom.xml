@@ -12,7 +12,7 @@
   <artifactId>jee-bootstrap-core</artifactId>
   <name>JEE Bootstrap :: Core model</name>
   <packaging>jar</packaging>
-
+  
   <dependencies>
 
     <dependency>
@@ -25,4 +25,5 @@
       <artifactId>assertj-core</artifactId>
     </dependency>
   </dependencies>
+ 
 </project>

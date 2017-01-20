@@ -8,46 +8,56 @@ public class DamierGameImpl implements DamierGame{
 	public static final int NUMBER_OF_CHIPS_BY_ROW = 5 ;
 	public static final String OUTSIDE_OF_BOARD_ERROR = "It is not possible to play outside of the board";
 	
-	List<List<PlateauCouleur>> plateau = new ArrayList<>(COLUMNS_NUMBER);
+	//List<List<PlateauCouleur>> plateau = new ArrayList<>(COLUMNS_NUMBER);
+	ArrayList<Couleurs> plateau =  new ArrayList<>(COLUMNS_NUMBER);
 	
 	public DamierGameImpl() {
-// initialise le plateau de jeu
-    	for (int i = 0; i < COLUMNS_NUMBER; i++) {
+		initPlateau	();
+		///initPions();
+    }
+// initialise le plateau de jeu	
+	@Override
+	public boolean initPlateau(){
+		boolean is_plateau_init = false;
+		for (int i = 0; i < COLUMNS_NUMBER; i++) {
     		for(int j = 0; j < ROWS_NUMBER; j++){
-    			//une case noire sur deux
+				//une case noire sur deux
     			if((j%2==0 && i%2==0) || (j%2!=0 && i%2!=0)){
-    				plateau.add(new ArrayList<PlateauCouleur>(j));
-    				plateau.get(j).set(i, PlateauCouleur.BLACK);
+    				plateau.add(new ArrayList<Couleurs>(j).set(j, Couleurs.BLACK));
+    				//plateau.get(j).set(i, PlateauCouleur.BLACK);
     				//plateau.add(PlateauCouleur.BLACK);
     				//plateau.add(new ArrayList<PlateauCouleur>().set(j, PlateauCouleur.BLACK);
                 }
                 else{ // une case blanche sur deux
-                    //ajouterCase(PionCouleur.WHITE);
+                    /*ajouterCase(PionCouleur.WHITE);
                 	plateau.add(new ArrayList<PlateauCouleur>(j));
-                 	plateau.get(j).set(i, PlateauCouleur.WHITE);	
+                 	plateau.get(j).set(i, PlateauCouleur.WHITE);
+                 	**/
+                	plateau.add(new ArrayList<Couleurs>(j).set(j, Couleurs.WHITE));
                 }
     		}
         }
-    //	initPions();
-    }
+		is_plateau_init = true;
+		return is_plateau_init;
+	}
    
  // itinialise les pions en plaçants 20 pions noirs en bas du plateau et 20 pions blancs en haut
-    private void initPions(){
+    public void initPions(){
     	for(int i = 0; i<ROWS_NUMBER; i++){
     		if(i%2!=0){
-    			//plateau.add(new ArrayList<PionCouleur>());
+    			//plateau.add(new ArrayList<Couleurs>());
     		}
     	}
-    }
+     }
 	
 	@Override
-	public void play(PionCouleur color, int column) throws GameException {
+	public void play(Couleurs color, int column) throws GameException {
 		
 	}
 
 	//retourne la couleur d'un pion s'il est dans une case
 	@Override
-	public PionCouleur getCell(int i, int j) {
+	public Couleurs getCell(int i, int j) {
 	 if (i < 0 || i >= getColumnsNumber()) {
 	            return null;
 	        }
@@ -68,8 +78,7 @@ public class DamierGameImpl implements DamierGame{
 	}
 
 	@Override
-	public PionCouleur getWinner() {
-		// TODO Auto-generated method stub
+	public Couleurs getWinner() {
 		return null;
 	}
 
