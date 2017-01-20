@@ -13,5 +13,9 @@ public class DamierGameTest {
 	    }
 	 
 	 @Test
+	   public void itInitializedBoard() throws Exception{
+		// game.init();
+		 System.out.println(game);
+	 }
 	 
 }
