@@ -1,7 +1,6 @@
 package damierCore;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class DamierGameImpl implements DamierGame {
@@ -34,9 +33,6 @@ public class DamierGameImpl implements DamierGame {
 		}
 	}
 	
-	
-	
-
 	/* booléen 
 	 *  renvoie true si le pion est déplacé 
 	 */

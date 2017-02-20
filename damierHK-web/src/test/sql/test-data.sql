@@ -1,0 +1,7 @@
+CREATE DATABASE TestDamierHKDB;
+GRANT ALL PRIVILEGES ON TestDamierHKDB.* TO root@localhost IDENTIFIED BY 'damierHK' WITH GRANT OPTION;
+CREATE TABLE GameEntry
+(
+id int NOT NULL,
+winnerColor varchar(45) NOT NULL
+);

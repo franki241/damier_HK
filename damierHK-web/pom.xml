@@ -1,0 +1,220 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.koudm.isen</groupId>
+  <artifactId>damierHK-web</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>damierHK-web Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <tomcat.version>7.0.75</tomcat.version>
+    <maven.tomcat.url>http://localhost:8080/manager/text</maven.tomcat.url>
+</properties>
+  <dependencies>
+  <!-- Junit and Asssertj -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit-dep</artifactId>
+      <version>4.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.6.2</version>
+      <scope>test</scope>
+   </dependency>
+   <!-- Servlet jsp and api -->
+    <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.2</version>
+            <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.0.1</version>
+        <scope>provided</scope>
+    </dependency>
+    <!-- JTA and JPA -->
+      <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>persistence-api</artifactId>
+        <version>1.0.2</version>
+        <scope>provided</scope>
+      </dependency>
+      
+       <dependency>
+        <groupId>javax.transaction</groupId>
+        <artifactId>jta</artifactId>
+        <version>1.1</version>
+        <scope>provided</scope>
+      </dependency>
+    <!-- MySql -->
+    <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>5.1.40</version>
+    <scope>provided</scope>
+    </dependency>
+    <!-- Jstl -->
+    <dependency>
+        <groupId>jstl</groupId>
+        <artifactId>jstl</artifactId>
+        <version>1.2</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>damierHK-web</finalName>
+    <pluginManagement>
+      <plugins>
+      <!-- Tomcat Plugin -->
+       <plugin>
+			<groupId>org.apache.tomcat.maven</groupId>
+			<artifactId>tomcat7-maven-plugin</artifactId>
+			<version>2.2</version>
+			<configuration>
+              <url>http://localhost:8080/manager/text</url>
+              <server>mytomcat7</server>
+              <path>/damierHK-web</path>
+              <username>admin</username>
+              <password>admin</password>
+        </configuration>
+		  </plugin>
+		  <!-- Maven plugin compile and resources Plugins -->
+      <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>3.2</version>
+      </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.4</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
+        <!-- Maven war Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.3</version>
+         <configuration>
+         <!-- jsp and images conf -->
+         <overlays>
+              <overlay>
+                <id>damierHK-web</id>
+                <type>war</type>
+                <includes>
+                  <include>websource.jsp</include>
+                </includes>
+                <targetPath>webapp/jsp</targetPath>
+              </overlay>
+            </overlays>
+          <webResources>
+            <resource>
+              <directory>src/main/webapp/images</directory>
+              <includes>
+                <include>arriereplan.jpg</include>
+                <include>damiers.gif</include>
+              </includes>
+       
+              <!--  
+              <excludes>
+                <exclude>*pattern3/pattern3</exclude>
+                <exclude>pattern4/pattern4</exclude>
+              </excludes>
+              -->  
+            </resource>
+             <resource>
+              <directory>src/main/webapp/WEB-INF/lib</directory>
+              <includes>
+                <include>mysql-connector-java-5.1.40-bin.jar</include>
+              </includes>
+               </resource>
+          </webResources>
+        </configuration>
+        </plugin>
+        <!-- MySql Plugin -->
+        <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>sql-maven-plugin</artifactId>
+        <version>1.5</version>
+ 
+        <dependencies>
+                <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.40</version>
+                </dependency>
+        </dependencies>
+ 
+        <configuration>
+          <driver>com.mysql.jdbc.Driver</driver>
+          <url>jdbc:mysql://localhost:3306/damierHKDB</url>
+          <username>root</username>
+          <password>damierHK</password>
+        </configuration>
+ 
+        <executions>
+          <execution>
+            <id>drop-table</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <autocommit>true</autocommit>
+              <sqlCommand>DROP TABLE IF EXISTS person</sqlCommand>
+            </configuration>
+          </execution>
+ 
+          <execution>
+            <id>create-table</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <autocommit>true</autocommit>
+              <srcFiles>
+                <srcFile>src/main/sql/db.sql</srcFile>
+              </srcFiles>
+            </configuration>
+          </execution>
+ 
+          <execution>
+            <id>insert-data</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <orderFile>ascending</orderFile>
+              <fileset>
+                <basedir>src/test/</basedir>
+                <includes>
+                  <include>sql/test-data.sql</include>
+                </includes>
+              </fileset>
+            </configuration>
+          </execution>
+ 
+        </executions>
+      </plugin>
+    </plugins>
+    </pluginManagement>
+  </build>
+</project>

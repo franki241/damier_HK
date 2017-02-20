@@ -1,29 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>org.dmetzler.isen.jee</groupId>
-    <artifactId>jee-bootstrap-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-
-
-  <artifactId>jee-bootstrap-core</artifactId>
-  <name>JEE Bootstrap :: Core model</name>
-  <packaging>jar</packaging>
+  
+  <groupId>org.koudm.isen</groupId>
+  <artifactId>damierWeb</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>damierWeb </name>
+  
+  <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+   
+  <build>
+    <finalName>damierWeb</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				
+				<configuration>
+                <server>tomcat</server>  
+                <url>http://localhost:8080/damierWeb</url>  
+                </configuration>
+			</plugin>
+		</plugins> 
+  </build>
   
   <dependencies>
-
-    <dependency>
+ 	
+ 	   <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-    </dependency>
+    
   </dependencies>
- 
 </project>
