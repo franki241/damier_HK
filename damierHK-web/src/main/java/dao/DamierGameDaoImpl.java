@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,8 @@ public class DamierGameDaoImpl implements DamierGameDao {
 	private DAOFactory daoFactory; 
 	private static final String SQL_SELECT= "SELECT id, winningColor FROM GameEntry ORDER BY id ";
 	private static final String SQL_SELECT_BY_ID= "SELECT id, winningColor FROM GameEntry WHERE id = ?";
-	private static final String SQL_INSERT = "INSERT INTO GameEntry (id,winningColor) VALUES (?, ?)";
+	//private static final String SQL_INSERT = "INSERT INTO GameEntry (id,winningColor) VALUES (?, ?)";
+	private static final String SQL_INSERT = "INSERT INTO GameEntry VALUES (?, ?)";
 	private static final String ID_GAME = "id";
 	private static final String WINNER_COLOR = "winnerColor";
 			
@@ -25,32 +27,38 @@ public class DamierGameDaoImpl implements DamierGameDao {
 	        this.daoFactory = daoFactory;
 	}
 	
-	/* ImplÈmentation de la mÈthode dÈfinie dans l'interface DamierGameDao */
+	/* Impl√©mentation de la m√©thode d√©finie dans l'interface DamierGameDao */
     @Override
     public GameEntry findById(long id ) throws DAOException {
         return findById( SQL_SELECT_BY_ID, id );
     }
 
-	public void insertGameEntry(GameEntry game) throws  IllegalArgumentException, DAOException {
+	/**public void insertGameEntry(GameEntry game) throws  IllegalArgumentException, DAOException {
 		    Connection connexion = null;
 		    PreparedStatement preparedStatement = null;
 		    ResultSet result = null;
 		    try {
-		        /* RÈcupÈration d'une connexion depuis la Factory */
+		        /* R√©cup√©ration d'une connexion depuis la Factory 
 		        connexion = (Connection) daoFactory.getConnection();
-		        preparedStatement = initialisationRequetePreparee( connexion, SQL_INSERT, true, game.getId(),  game.getWinnerColor() );
+		        //preparedStatement = initialisationRequetePreparee( connexion, SQL_INSERT, true, game.getId(),  game.getWinnerColor() );
+		        preparedStatement = connexion.prepareStatement(SQL_INSERT, new String[] {ID_GAME});
+		        String winnerColor = request.getParameter(PARAM_WINNER_COLOR);
+		    	//Long id = Long.parseLong(idGame); 
+		        preparedStatement.setInt(1, winnerColor);
 		        int statut = preparedStatement.executeUpdate();
-		        /* Analyse du statut retournÈ par la requÍte d'insertion */
+		        /* Analyse du statut retourn√© par la requ√™te d'insertion 
 		        if ( statut == 0 ) {
-		            throw new DAOException( "…chec de la crÈation de jeu, aucune ligne ajoutÈe dans la table." );
+		            throw new DAOException( "Echec de la cr√©ation de jeu, aucune ligne ajout√©e dans la table." );
 		        }
-		        /* RÈcupÈration de l'id auto-gÈnÈrÈ par la requÍte d'insertion */
+		        /* R√©cup√©ration de l'id auto-g√©n√©r√© par la requ√™te d'insertion 
 		        result = preparedStatement.getGeneratedKeys();
 		        if ( result.next() ) {
-		            /* Puis initialisation de la propriÈtÈ id du bean GameEntry avec sa valeur */
+		            /* Puis initialisation de la propri√©t√© id du bean GameEntry avec sa valeur 
 		            game.setId( result.getLong( 1 ) );
+		            game.setWinnerColor(result.getString(2));
+		            connexion.commit();
 		        } else {
-		            throw new DAOException( "…chec de la crÈation de jeu en base, aucun ID auto-gÈnÈrÈ retournÈ." );
+		            throw new DAOException( "Echec de la cr√©ation de jeu en base, aucun ID auto-g√©n√©r√© retournÔøΩ." );
 		        }
 		    } catch ( SQLException e ) {
 		        throw new DAOException( e );
@@ -58,19 +66,55 @@ public class DamierGameDaoImpl implements DamierGameDao {
 		        fermeturesSilencieuses( result, preparedStatement, connexion );
 		    }
 		}
+	 * @return **/
 	
 	public GameEntry insertGameEntry(HttpServletRequest request) throws  IllegalArgumentException, DAOException {
-	    String id = request.getParameter(ID_GAME);
-	    String winnerColor = request.getParameter(WINNER_COLOR);
-	    
-	    GameEntry game = new GameEntry();
-	    try {
-	        /* RÈcupÈration d'une connexion depuis la Factory */
-	        DamierGameDao.insertGameEntry(game);
-	    }catch(DAOException e){
-	    	e.printStackTrace();
-	    }
-	    return game;
+		 Connection connexion = null;
+		 PreparedStatement preparedStatement = null;
+		 ResultSet result = null;
+		 GameEntry game = new GameEntry();
+		/*R√©cup√©ration de l'id et de la couleur gagnante dans l'url*/   
+		 if (request.getParameter(ID_GAME) != null && request.getParameter(WINNER_COLOR) != null){
+			 String id = request.getParameter(ID_GAME);
+			 String winnerColor = request.getParameter(WINNER_COLOR);
+			 /*Cr√©ation d'une nouvelle instance de l'entit√© GameEntry et set des valeurs*/
+			 Long idGame = Long.parseLong(id);
+			 game.setId(idGame);
+			 game.setWinnerColor(winnerColor);
+			 //GameEntry game = new GameEntry(idGame, winnerColor);
+			 try {
+			        /* R√©cup√©ration d'une connexion depuis la Factory */
+			    	connexion = (Connection) daoFactory.getConnection();
+			        preparedStatement = connexion.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+			        preparedStatement.setString(2, winnerColor);
+			        int statut = preparedStatement.executeUpdate();
+			        /* Analyse du statut retourn√© par la requ√™te d'insertion */
+			        if ( statut == 0 ) {
+			            throw new DAOException( "Echec de la cr√©ation de jeu, aucune ligne ajout√©e dans la table." );
+			        }
+			        /* R√©cup√©ration de l'id auto-g√©n√©r√© par la requ√™te d'insertion */
+			        result = preparedStatement.getGeneratedKeys();
+			        if ( result.next() ) {
+			            /* Puis initialisation de la propri√©t√© id du bean GameEntry avec sa valeur */
+			            game.setId( result.getLong( 1 ) );
+			            //game.setWinnerColor(result.getString(2));
+			           
+			        } else {
+			            throw new DAOException( "Echec de la cr√©ation de jeu en base, aucun ID auto-g√©n√©r√© retourn√©." );
+			        }
+			       // connexion.commit();
+			    } catch ( SQLException e ) {
+			        throw new DAOException( e );
+			    } finally {
+			        fermeturesSilencieuses( result, preparedStatement, connexion );
+			    }
+			    /*
+			    }catch(DAOException e){
+			    	e.printStackTrace();
+			    	return game;
+			    */ 
+			}
+		return game;		 
 	}	
 	private GameEntry findById( String sql, Object... objets ) throws DAOException {
         Connection connexion = null;
@@ -79,15 +123,15 @@ public class DamierGameDaoImpl implements DamierGameDao {
         GameEntry game = null;
 
         try {
-            /* RÈcupÈration d'une connexion depuis la Factory */
+            /* R√©cup√©ration d'une connexion depuis la Factory */
             connexion = daoFactory.getConnection();
             /*
-             * PrÈparation de la requÍte avec les objets passÈs en arguments
-             * (ici, uniquement un id) et exÈcution.
+             * Pr√©paration de la requ√™te avec les objets pass√©s en arguments
+             * (ici, uniquement un id) et ex√©cution.
              */
             preparedStatement = initialisationRequetePreparee( connexion, sql, false, objets );
             resultSet = preparedStatement.executeQuery();
-            /* Parcours de la ligne de donnÈes retournÈe dans le ResultSet */
+            /* Parcours de la ligne de donn√©es retourn√©e dans le ResultSet */
             if ( resultSet.next() ) {
                 game = map( resultSet );
             }
@@ -119,7 +163,7 @@ public class DamierGameDaoImpl implements DamierGameDao {
 		return games;
 		}
 	/*
-	 * Simple mÈthode utilitaire permettant de faire la correspondance (le
+	 * Simple m√©thode utilitaire permettant de faire la correspondance (le
 	 * mapping) entre une ligne issue de la table des jeux (un
 	 * ResultSet) et un bean GameEntry.
 	 */

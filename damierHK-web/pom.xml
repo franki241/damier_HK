@@ -8,6 +8,8 @@
   <name>damierHK-web Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <tomcat.version>7.0.75</tomcat.version>
     <maven.tomcat.url>http://localhost:8080/manager/text</maven.tomcat.url>
 </properties>
@@ -90,7 +92,8 @@
         <version>3.1</version>
         <configuration>
           <source>1.8</source>
-          <target>1.8</target>
+          <target>1.8</target>      
+       <executable>${JAVA_HOME}/bin</executable>
         </configuration>
       </plugin>
       <plugin>
@@ -163,13 +166,48 @@
  
         <configuration>
           <driver>com.mysql.jdbc.Driver</driver>
-          <url>jdbc:mysql://localhost:3306/damierHKDB</url>
+          <url>jdbc:mysql://localhost:3306/damierHK_db</url>
           <username>root</username>
           <password>damierHK</password>
         </configuration>
  
         <executions>
+                <execution>
+            <id>create-database</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <autocommit>true</autocommit>
+              <sqlCommand>CREATE DATABASE damierHK_db</sqlCommand>
+              <autocommit>true</autocommit>
+              <srcFiles>
+                <srcFile>src/main/sql/db.sql</srcFile>
+              </srcFiles>
+            </configuration>
+          </execution>
+ 
           <execution>
+            <id>insert-data</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <orderFile>ascending</orderFile>
+              <fileset>
+                <basedir>src/test/</basedir>
+                <includes>
+                <include>sql/db.sql</include>
+                  <include>sql/test-data.sql</include>
+                </includes>
+              </fileset>
+            </configuration>
+          </execution>
+  
+ <!-- 
+         <execution>
             <id>drop-table</id>
             <phase>process-test-resources</phase>
             <goals>
@@ -177,7 +215,7 @@
             </goals>
             <configuration>
               <autocommit>true</autocommit>
-              <sqlCommand>DROP TABLE IF EXISTS person</sqlCommand>
+              <sqlCommand>DROP TABLE IF EXISTS GameEntry</sqlCommand>
             </configuration>
           </execution>
  
@@ -211,7 +249,7 @@
               </fileset>
             </configuration>
           </execution>
- 
+  -->
         </executions>
       </plugin>
     </plugins>

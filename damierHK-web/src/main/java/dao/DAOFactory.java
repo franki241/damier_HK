@@ -26,8 +26,8 @@ public class DAOFactory {
     }
 
     /*
-     * Méthode chargée de récupérer les informations de connexion à la base de
-     * données, charger le driver JDBC et retourner une instance de la Factory
+     * MÃ©thode chargÃ©e de rÃ©cupÃ©rer les informations de connexion Ã  la base de
+     * donnÃ©es, charger le driver JDBC et retourner une instance de la Factory
      */
     public static DAOFactory getInstance() throws DAOConfigurationException {
         Properties properties = new Properties();
@@ -63,13 +63,13 @@ public class DAOFactory {
         return instance;
     }
 
-    /* Méthode chargée de fournir une connexion à la base de données */
+    /* MÃ©thode chargÃ©e de fournir une connexion Ã  la base de donnÃ©es */
      /* package */ Connection getConnection() throws SQLException {
         return DriverManager.getConnection( url, username, password );
     }
 
     /*
-     * Méthodes de récupération de l'implémentation des différents DAO 
+     * MÃ©thode de rÃ©cupÃ©ration de l'implÃ©mentation des diffÃ©rents DAO 
      * 
      */
      public DamierGameDao getDamierGameDao() {

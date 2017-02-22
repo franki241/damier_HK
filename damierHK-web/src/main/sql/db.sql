@@ -3,5 +3,6 @@ GRANT ALL PRIVILEGES ON damierHKDB.* TO root@localhost IDENTIFIED BY 'damierHK' 
 CREATE TABLE damierHKDB.GameEntry
 (
 id int NOT NULL,
-winnerColor varchar(45) NOT NULL
+winnerColor varchar(45) NOT NULL,
+PRIMARY KEY (id)
 );

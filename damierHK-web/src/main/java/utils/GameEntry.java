@@ -2,6 +2,13 @@ package utils;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name = "GAME_ENTRY")
 public class GameEntry  implements Serializable {
 
 	/**
@@ -22,6 +29,7 @@ public class GameEntry  implements Serializable {
 	/**
 	 * @return the winnerColor
 	 */
+	@Column(name = "WINNER_COLOR", nullable = false, length = 45)
 	public String getWinnerColor() {
 		return winnerColor;
 	}
@@ -34,9 +42,12 @@ public class GameEntry  implements Serializable {
 	/**
 	 * @return the id
 	 */
-	public long getId() {
-		return id;
-	}
+	@Id
+    @Column(name = "ID", unique = true, nullable = false)
+    @GeneratedValue
+    public long getId() {
+        return id;
+    }
 	/**
 	 * @param l the id to set
 	 */
